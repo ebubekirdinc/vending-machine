@@ -23,6 +23,7 @@
                 Console.WriteLine("1] >> Feed Money");
                 Console.WriteLine("2] >> Select Product");
                 Console.WriteLine("3] >> Finish Transaction");
+                Console.WriteLine("4] >> Order");
                 Console.WriteLine("Q] >> Return to Main Menu");
                 Console.WriteLine($"Money in Machine: {this.vm.MoneyInMachine.ToString("C")}");
                 Console.Write("What option do you want to select? ");
@@ -86,6 +87,71 @@
                 {
                     Console.WriteLine("Finishing Transaction");
                     Console.WriteLine(this.vm.Money.GiveChange());
+                }
+                else if (input == "4")
+                {
+                    while (true)
+                    {
+                        Console.WriteLine("Please give your order in this format:");
+                        Console.WriteLine("order <amount> <item_number> <Quantity>");
+                        Console.WriteLine(string.Empty);
+
+                        string orderCommand = Console.ReadLine();
+                        if (string.IsNullOrWhiteSpace(orderCommand))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Please give your order in this format:");
+                            Console.WriteLine("order <amount> <item_number> <Quantity>");
+                        }
+
+                        var order = orderCommand.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                        if (order.Length != 4)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Please give your order in this format:");
+                            Console.WriteLine("order <amount> <item_number> <Quantity>");
+                        }
+
+
+                        var itemNumber = order[2];
+
+                        if (!decimal.TryParse(order[1], out decimal amount))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Give a valid amount in your order.");
+                        }
+                        else if (!int.TryParse(order[3], out int quantity))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Give a valid quantity in your order.");
+                        }
+                        else if (!this.vm.ItemExists(itemNumber))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Give a valid item number in your order.");
+                        }
+                        else if (!this.vm.AreThereEnoughItemsInInventory(itemNumber, quantity))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("There are not enough items in stock");
+                        }
+                        else if (!this.vm.IsExactChange(itemNumber, quantity, amount))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Give exact change in your order");
+                        }
+                        else if (!this.vm.RetrieveItemForOrder(itemNumber, quantity))
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Order unsuccessful. There are not enough items in stock");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Order successful");
+                            break;
+                        }
+                    }
                 }
                 else if (input.ToUpper() == "Q")
                 {

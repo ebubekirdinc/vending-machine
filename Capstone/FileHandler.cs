@@ -17,9 +17,9 @@
             Dictionary<string, VendingItem> items = new Dictionary<string, VendingItem>();
 
             string file = string.Empty;
-            if (File.Exists("vendingmachine.csv"))
+            if (File.Exists("inventory.csv"))
             {
-                file = "vendingmachine.csv";
+                file = "inventory.csv";
 
                 try
                 {

@@ -47,10 +47,25 @@
         /// </summary>
         /// <returns>bool</returns>
         public bool RemoveItem()
-            {
+        {
             if (this.ItemsRemaining > 0)
             {
                 this.ItemsRemaining--;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns false if there aren't enough items
+        /// </summary>
+        /// <returns>bool</returns>
+        public bool RemoveTheGivenQuantityOfItem(int quantity)
+        {
+            if (this.ItemsRemaining >= quantity)
+            {
+                this.ItemsRemaining -= quantity;
                 return true;
             }
 

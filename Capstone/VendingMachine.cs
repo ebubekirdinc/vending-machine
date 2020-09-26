@@ -55,35 +55,66 @@
 
         public bool RetreiveItem(string itemNumber)
         {
-                // If the item exists (not Q1 or something like that)
-                // and we can remove the item
-                // and we have more money in the machine than the price
-                if (this.ItemExists(itemNumber)
-                    && this.Money.MoneyInMachine >= this.VendingMachineItems[itemNumber].Price
-                    && this.VendingMachineItems[itemNumber].ItemsRemaining > 0
-                    && this.VendingMachineItems[itemNumber].RemoveItem())
-                {
-                    // Logging message "CANDYBARNAME A1"
-                    string message = $"{this.VendingMachineItems[itemNumber].ProductName.ToUpper()} {itemNumber}";
+            // If the item exists (not Q1 or something like that)
+            // and we can remove the item
+            // and we have more money in the machine than the price
+            if (this.ItemExists(itemNumber)
+                && this.Money.MoneyInMachine >= this.VendingMachineItems[itemNumber].Price
+                && this.VendingMachineItems[itemNumber].ItemsRemaining > 0
+                && this.VendingMachineItems[itemNumber].RemoveItem())
+            {
+                // Logging message "CANDYBARNAME A1"
+                string message = $"{this.VendingMachineItems[itemNumber].ProductName.ToUpper()} {itemNumber}";
 
-                    // Logging before: current money in machine
-                    decimal before = this.Money.MoneyInMachine;
+                // Logging before: current money in machine
+                decimal before = this.Money.MoneyInMachine;
 
-                    // Remove the money
-                    this.Money.RemoveMoney(this.VendingMachineItems[itemNumber].Price);
+                // Remove the money
+                this.Money.RemoveMoney(this.VendingMachineItems[itemNumber].Price);
 
-                    // Logging after: current money in machine
-                    decimal after = this.Money.MoneyInMachine;
+                // Logging after: current money in machine
+                decimal after = this.Money.MoneyInMachine;
 
-                    // Log the log
-                    this.Log.Log(message, before, after);
+                // Log the log
+                this.Log.Log(message, before, after);
 
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool AreThereEnoughItemsInInventory(string itemNumber, int quantity)
+        {
+            if (this.VendingMachineItems[itemNumber].ItemsRemaining >= quantity)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsExactChange(string itemNumber, int quantity, decimal amount)
+        {
+            var total = this.VendingMachineItems[itemNumber].Price * quantity;
+            if (amount == total)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool RetrieveItemForOrder(string itemNumber, int quantity)
+        { 
+            if (this.VendingMachineItems[itemNumber].RemoveTheGivenQuantityOfItem(quantity))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
